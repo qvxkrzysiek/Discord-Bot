@@ -5,6 +5,7 @@ import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import me.qvx.DTOs.MusicQueueElement;
+import me.qvx.MusicPlayer.Handlers.MusicChatHandler;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 import java.util.ArrayList;
@@ -15,25 +16,25 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class TrackScheduler extends AudioEventAdapter {
 
     public final AudioPlayer audioPlayer;
-    public final MusicChatController musicChatController;
+    public final MusicChatHandler musicChatHandler;
     public MusicQueueElement currentTrackElement;
     public BlockingQueue<MusicQueueElement> queue;
     public boolean repeat = false;
 
-    public TrackScheduler(AudioPlayer audioPlayer, MusicChatController musicChatController){
+    public TrackScheduler(AudioPlayer audioPlayer, MusicChatHandler musicChatHandler){
         this.audioPlayer = audioPlayer;
         this.queue = new LinkedBlockingQueue<>();
-        this.musicChatController = musicChatController;
+        this.musicChatHandler = musicChatHandler;
     }
 
 
     public void queue(AudioTrack track, MessageReceivedEvent e){
         if(this.audioPlayer.startTrack(track,true)){
             currentTrackElement = new MusicQueueElement(audioPlayer.getPlayingTrack(), e);
-            musicChatController.updatePlayer(audioPlayer, e, repeat);
+            musicChatHandler.updatePlayer(audioPlayer, e, repeat);
         } else {
             this.queue.offer(new MusicQueueElement(track,e));
-            musicChatController.updateQueue(new LinkedBlockingQueue<>(queue));
+            musicChatHandler.updateQueue(new LinkedBlockingQueue<>(queue));
         }
     }
 
@@ -44,8 +45,8 @@ public class TrackScheduler extends AudioEventAdapter {
                 try {
                     Thread.sleep(30000);
                     if(audioPlayer.getPlayingTrack() == null){
-                        MusicChatController.MUSIC_TEXT_CHANNEL.getGuild().getAudioManager().closeAudioConnection();
-                        MusicChatController.reinit();
+                        MusicChatHandler.MUSIC_TEXT_CHANNEL.getGuild().getAudioManager().closeAudioConnection();
+                        MusicChatHandler.reinit();
                         PlayerManager.destroyINSTANCE();
                     }
                 } catch (InterruptedException e) {
@@ -57,8 +58,8 @@ public class TrackScheduler extends AudioEventAdapter {
         currentTrackElement = queue.poll();
         System.out.println(currentTrackElement.getAudioTrack().getInfo().title);
         audioPlayer.startTrack(currentTrackElement.getAudioTrack(),false);
-        musicChatController.updatePlayer(audioPlayer, currentTrackElement.getMessageEvent(), repeat);
-        musicChatController.updateQueue(new LinkedBlockingQueue<>(queue));
+        musicChatHandler.updatePlayer(audioPlayer, currentTrackElement.getMessageEvent(), repeat);
+        musicChatHandler.updateQueue(new LinkedBlockingQueue<>(queue));
     }
 
     public void pauseOrResume(){
@@ -68,10 +69,10 @@ public class TrackScheduler extends AudioEventAdapter {
     public void cycleRepeat(){
         if(repeat){
             repeat = false;
-            musicChatController.updatePlayer(audioPlayer, currentTrackElement.getMessageEvent(), repeat);
+            musicChatHandler.updatePlayer(audioPlayer, currentTrackElement.getMessageEvent(), repeat);
         } else {
             repeat = true;
-            musicChatController.updatePlayer(audioPlayer, currentTrackElement.getMessageEvent(), repeat);
+            musicChatHandler.updatePlayer(audioPlayer, currentTrackElement.getMessageEvent(), repeat);
         }
     }
 
@@ -80,7 +81,7 @@ public class TrackScheduler extends AudioEventAdapter {
         ArrayList<MusicQueueElement> list = new ArrayList<>(new LinkedBlockingQueue<>(queue));
         Collections.shuffle(list);
         queue = new LinkedBlockingQueue<>(list);
-        musicChatController.updateQueue(new LinkedBlockingQueue<>(queue));
+        musicChatHandler.updateQueue(new LinkedBlockingQueue<>(queue));
     }
 
     @Override

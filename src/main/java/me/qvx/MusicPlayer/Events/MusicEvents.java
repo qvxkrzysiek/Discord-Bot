@@ -1,6 +1,6 @@
 package me.qvx.MusicPlayer.Events;
 
-import me.qvx.MusicPlayer.MusicChatController;
+import me.qvx.MusicPlayer.Handlers.MusicChatHandler;
 import me.qvx.MusicPlayer.PlayerManager;
 import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -13,7 +13,7 @@ public class MusicEvents extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(MessageReceivedEvent e){
-        if (!e.getChannel().getId().equals(MusicChatController.getMusicTextChannel().getId())) {
+        if (!e.getChannel().getId().equals(MusicChatHandler.getMusicTextChannel().getId())) {
             return;
         }
         if(e.getAuthor().isBot()) {

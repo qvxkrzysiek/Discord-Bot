@@ -1,8 +1,7 @@
 package me.qvx.MusicPlayer.Events;
 
-import me.qvx.MusicPlayer.MusicChatController;
+import me.qvx.MusicPlayer.Handlers.MusicChatHandler;
 import me.qvx.MusicPlayer.PlayerManager;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
@@ -13,7 +12,7 @@ public class MusicReactionClick extends ListenerAdapter {
     @Override
     public void onMessageReactionAdd(MessageReactionAddEvent e) {
         if(e.getUser().isBot()) return;
-        if(e.getMessageId().equals(MusicChatController.getEmbedMessage().getId())){
+        if(e.getMessageId().equals(MusicChatHandler.getEmbedMessage().getId())){
             System.out.println(e.getReaction().getEmoji().asUnicode().getAsCodepoints());
             if(e.getReaction().getEmoji().asUnicode().getAsCodepoints().equals("U+25b6")){
                 PlayerManager.getINSTANCE().getMusicManager(Objects.requireNonNull(e.getGuild())).scheduler.pauseOrResume();
@@ -33,7 +32,7 @@ public class MusicReactionClick extends ListenerAdapter {
             }
             if(e.getReaction().getEmoji().asUnicode().getAsCodepoints().equals("U+23f9")){
                 e.getGuild().getAudioManager().closeAudioConnection();
-                MusicChatController.reinit();
+                MusicChatHandler.reinit();
                 PlayerManager.destroyINSTANCE();
                 e.getReaction().removeReaction(e.getUser()).queue();
             }

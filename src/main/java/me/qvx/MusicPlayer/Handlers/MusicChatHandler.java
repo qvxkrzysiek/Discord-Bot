@@ -1,4 +1,4 @@
-package me.qvx.MusicPlayer;
+package me.qvx.MusicPlayer.Handlers;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import me.qvx.DTOs.MusicQueueElement;
@@ -12,7 +12,7 @@ import net.dv8tion.jda.api.requests.RestAction;
 import java.awt.*;
 import java.util.concurrent.BlockingQueue;
 
-public class MusicChatController {
+public class MusicChatHandler {
 
     public static TextChannel MUSIC_TEXT_CHANNEL;
     private static Message EMBED_MESSAGE;
@@ -29,7 +29,7 @@ public class MusicChatController {
             }
         }).start();
         EmbedBuilder embedBuilder = new EmbedBuilder();
-        embedBuilder.setTitle("Test");
+        embedBuilder.setTitle("Czekam na podanie muzyki...");
         RestAction<Message> restAction = MUSIC_TEXT_CHANNEL.sendMessageEmbeds(embedBuilder.build());
         EMBED_MESSAGE = restAction.complete();
         EMBED_MESSAGE.addReaction(Emoji.fromUnicode("U+25b6")).queue();
@@ -45,12 +45,12 @@ public class MusicChatController {
 
     public static void reinit(){
         EmbedBuilder embedBuilder = new EmbedBuilder();
-        embedBuilder.setTitle("Test");
+        embedBuilder.setTitle("Czekam na podanie muzyki...");
         EMBED_MESSAGE.editMessageEmbeds(embedBuilder.build()).queue();
         QUEUE_MESSAGE.editMessage("Kolejka jest aktualnie pusta").queue();
     }
 
-    public MusicChatController() {
+    public MusicChatHandler() {
     }
 
     public void updateQueue(BlockingQueue<MusicQueueElement> queue){
@@ -62,10 +62,10 @@ public class MusicChatController {
         StringBuilder stringBuilder = new StringBuilder();
         int i = 1;
 
-        stringBuilder.append("Kolejka: ").append("\n");
+        stringBuilder.append("> **Kolejka:** ").append("\n");
         while (!queue.isEmpty()) {
             MusicQueueElement element = queue.poll();
-            stringBuilder.append(i).append(".) ").append(element.getTitle()).append(" ").append(element.getMessageAuthor()).append("\n");
+            stringBuilder.append("> **").append(i).append(".)**  __").append(element.getTitle()).append("__\n> *Dodane przez:  ").append(element.getMessageAuthor()).append("*\n");
             i++;
             if(i==11) {
                 if(queue.size() != 0) stringBuilder.append("I wiecej ... ").append(queue.size());
@@ -78,7 +78,7 @@ public class MusicChatController {
 
     public void updatePlayer(AudioPlayer audioPlayer, MessageReceivedEvent e, boolean repeat){
         EmbedBuilder embedBuilder = new EmbedBuilder();
-        embedBuilder.setAuthor("Odtwarzam");
+        embedBuilder.setAuthor("Odtwarzam",null,"https://cdn-icons-png.flaticon.com/512/0/375.png");
         embedBuilder.setTitle(audioPlayer.getPlayingTrack().getInfo().title);
         embedBuilder.setDescription(audioPlayer.getPlayingTrack().getInfo().author);
         embedBuilder.setImage(getImage(audioPlayer.getPlayingTrack().getInfo().uri));
@@ -105,6 +105,11 @@ public class MusicChatController {
         return "https://img.youtube.com/vi/" + token_link + "/0.jpg";
     }
 
+    private String getMusicDuration(long length){
+        long toSeconds = length/1000;
+        int minutes = (int) (toSeconds/60);
+        return minutes + ":" + (toSeconds-minutes*60L);
+    }
     public static TextChannel getMusicTextChannel() {
         return MUSIC_TEXT_CHANNEL;
     }

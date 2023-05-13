@@ -1,4 +1,4 @@
-package me.qvx.MusicPlayer;
+package me.qvx.MusicPlayer.Handlers;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.track.playback.MutableAudioFrame;
