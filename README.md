@@ -13,5 +13,6 @@ A bot that you can add to your Discord server and enjoy listening to music with 
 - And more!
 
 ## Gallery
-
+<details>
+  <summary>GUI</summary>
 ![GUI INTERFACE](https://raw.githubusercontent.com/qvxkrzysiek/Discord-Bot/main/docs/Discord1.png)
