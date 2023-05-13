@@ -19,6 +19,7 @@ A bot that you can add to your Discord server and enjoy listening to music with 
 
 ## Installation
 To install the bot you will need to create a token for it via [Discord Developer Portal](https://discord.com/developers/docs/intro) On this page you can configure the name of the bot and its icon.
+
 The second important element will be getting a token from [OpenAI API](https://platform.openai.com/overview).
 Once these things are done you can proceed to configuration.
 
@@ -33,7 +34,7 @@ MUSIC_CHAT_ID: ""
 In this file you put your Discord API token and OpenAI API token.
 In place of CHATGPT CHAT ID, MUSIC_CHAT ID, enter the numbers of discord channels on which you want the bot to operate.
   
-### 2 RUNNING
+### 2 Running
 To run the program, I recommend opening the repository in [IntelliJ IDEA](https://www.jetbrains.com/idea/)
 
 You can use a different environment, but this may result in the pom.xml dependencies not working
