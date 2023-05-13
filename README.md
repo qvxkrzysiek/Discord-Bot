@@ -24,7 +24,8 @@ The second important element will be getting a token from [OpenAI API](https://p
 
 Once these things are done you can proceed to configuration.
 
-### 1 CONFIGURATION
+<details>
+  <summary>1 Configuration</summary>
 Path: Discord-Bot/src/main/resources/config.yml
 ```shell
 DISCORD_API_TOKEN: ""
@@ -35,5 +36,7 @@ MUSIC_CHAT_ID: ""
 In this file you put your Discord API token and OpenAI API token.
 
 In place of CHATGPT CHAT ID, MUSIC_CHAT ID, enter the numbers of discord channels on which you want the bot to operate.
+  </details>
+
   
 ### 2 RUNNING
